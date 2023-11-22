@@ -1,8 +1,22 @@
+import { provideHttpClient, withFetch, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
 import { ApplicationConfig } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideRouter, withComponentInputBinding, withHashLocation, withInMemoryScrolling } from '@angular/router';
 
 import { routes } from './app.routes';
+import { isoDateInterceptor } from './core/iso-date.interceptor';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes)]
+  providers: [
+    provideRouter(
+      routes,
+      withInMemoryScrolling({ scrollPositionRestoration: 'enabled' }),
+      withHashLocation(),
+      withComponentInputBinding(),
+    ),
+
+    provideHttpClient(withInterceptors([isoDateInterceptor]), withInterceptorsFromDi(), withFetch()),
+
+    provideAnimations(),
+  ],
 };
